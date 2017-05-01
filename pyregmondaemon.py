@@ -91,7 +91,7 @@ class RegMon(object):
         self.reg_handle = None
         self.evt_handle = None
         self.watching = False
-        self.logfile = 'pyregmondaemon.py.log'
+        self.logfile = 'pyregmondaemon.log'
         self.last_sweep_time = 0
         self.event_timeout = 1000   # ms (don't use win32event.INFINITE)
         self.periodic_sweep = 5*60  # s
@@ -109,12 +109,10 @@ class RegMon(object):
         self.log = logging.getLogger(log_title)
         self.log.setLevel(logging.DEBUG)
         log_formatter = logging.Formatter('%(asctime)s,%(msecs)03d %(levelname)-5.5s [%(name)s] %(message)s')
-
         log_fh = logging.FileHandler(self.logfile)
         log_fh.setLevel(logging.DEBUG)
         log_fh.setFormatter(log_formatter)
         self.log.addHandler(log_fh)
-
         log_ch = logging.StreamHandler(sys.stdout)
         log_ch.setLevel(logging.DEBUG)
         log_ch.setFormatter(log_formatter)

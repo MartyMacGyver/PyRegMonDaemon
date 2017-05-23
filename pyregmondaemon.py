@@ -216,9 +216,9 @@ if __name__ == "__main__":
 
     subkeys_allowed = [  # Exceptions to the block list
         # Will have ^ and $ added programatically
-        r'.*\s*DropboxExt05', r'.*\s*DropboxExt5',
-        r'.*\s*DropboxExt06', r'.*\s*DropboxExt6',
-        r'.*\s*DropboxExt07', r'.*\s*DropboxExt7',
+        #r'.*\s*DropboxExt05', r'.*\s*DropboxExt5',
+        #r'.*\s*DropboxExt06', r'.*\s*DropboxExt6',
+        #r'.*\s*DropboxExt07', r'.*\s*DropboxExt7',
         r'.*\s*SkyDrivePro1',
     ]
 

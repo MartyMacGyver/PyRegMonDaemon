@@ -204,7 +204,6 @@ class RegMon(object):
 
 
 if __name__ == "__main__":
-
     # There should be NO reason to change this value!
     fullkey_watched = r'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\ShellIconOverlayIdentifiers'
 

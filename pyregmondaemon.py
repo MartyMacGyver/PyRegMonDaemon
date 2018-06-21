@@ -11,7 +11,7 @@ Disclaimer: this modifies your registry - DO NOT USE if you aren't comfortable
 with editing your registry!
 
 -------------------------------------------------------------------------------
-    Copyright 2017 Martin F. Falatic
+    Copyright 2017-2018 Martin F. Falatic
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -51,6 +51,14 @@ Notable shell icon overlays that order themselved first by prepending spaces:
     DropboxExt08 Locked: A file or folder isn't syncing (gray minus + Lock)
     DropboxExt09 ?
     DropboxExt10 ?
+
+    OneDrive1 ?
+    OneDrive2 ?
+    OneDrive3 ?
+    OneDrive4 ?
+    OneDrive5 ?
+    OneDrive6 ?
+    OneDrive7 ?
 
     SkyDrivePro1 ErrorConflict [useful]
     SkyDrivePro2 SyncInProgress
@@ -211,6 +219,7 @@ if __name__ == "__main__":
         # Will have ^ and $ added programatically
         r'.*\s*DropboxExt.*',
         r'.*\s*SkyDrivePro.*',
+        r'.*\s*OneDrive.*',
     ]
 
     subkeys_allowed = [  # Exceptions to the block list
@@ -218,7 +227,7 @@ if __name__ == "__main__":
         #r'.*\s*DropboxExt05', r'.*\s*DropboxExt5',
         #r'.*\s*DropboxExt06', r'.*\s*DropboxExt6',
         #r'.*\s*DropboxExt07', r'.*\s*DropboxExt7',
-        r'.*\s*SkyDrivePro1',
+        #r'.*\s*SkyDrivePro1',
     ]
 
     regmon = RegMon(fullkey_watched)

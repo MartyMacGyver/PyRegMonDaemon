@@ -14,17 +14,9 @@ _You got this far: do I need to remind you to back up your registry? Maybe your 
 
 ## Why this exists:
 
-Windows only offers about 15 shell icon overlay slots. They are allocated
-in alphanumeric registry key name order. Programs like TortoiseGit don't
-force themselves to appear first in the list, but others applications will
-prepend spaces to their key names to use up all the initial slots. This
-breaks TortoiseGit's selective overlays as well as those of other apps.
-Furthermore, apps that do this often don't allow similarly selective
-configuration of their overlays so as to allow them to cooperate with
-other apps that the user would prioritize for overlays.
+Windows only offers about 15 shell icon overlay slots. They are allocated in alphanumeric registry key name order. Programs like TortoiseGit don't force themselves to appear first in the list, but others applications such as Dropbox and OneDrive will prepend spaces to their key names to use up all the initial slots. This breaks TortoiseGit's selective overlays as well as those of other apps. Furthermore, apps that do this often don't allow similarly selective configuration of their overlays so as to allow them to cooperate with other apps that the user would prioritize for overlays.
 
-This daemon will immediately and periodically undo specific unwanted
-changes to the overlays, preventing such problems in the first place.
+This daemon will immediately and periodically undo specific unwanted changes to the overlays, preventing such problems in the first place.
 
 Workaround discussions:
     http://stackoverflow.com/questions/25156238/tortoisegit-not-showing-icon-overlays

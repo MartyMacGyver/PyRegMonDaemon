@@ -11,7 +11,7 @@ Disclaimer: this modifies your registry - DO NOT USE if you aren't comfortable
 with editing your registry!
 
 -------------------------------------------------------------------------------
-    Copyright 2017-2018 Martin F. Falatic
+    Copyright 2017-2019 Martin F. Falatic
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ Why this exists:
     Furthermore, apps that do this often don't allow similarly selective
     configuration of their overlays so as to allow them to cooperate with
     other apps that the user would prioritize for overlays.
-    
+
     This daemon will immediately and periodically undo specific unwanted
     changes to the overlays, preventing such problems in the first place.
 
@@ -67,28 +67,30 @@ Notable shell icon overlays that order themselved first by prepending spaces:
 -------------------------------------------------------------------------------
 '''
 
-import win32api
-import win32event
-import win32con
 import logging
-import time
+import pywintypes
 import re
 import sys
+import time
+import win32api
+import win32con
+import win32event
+
 
 class RegMon(object):
     @staticmethod
     def stringToHive(name):
         hive_names = {
-            "HKEY_CLASSES_ROOT":   win32con.HKEY_CLASSES_ROOT,
-            "HKCR":                win32con.HKEY_CLASSES_ROOT,
-            "HKEY_CURRENT_USER":   win32con.HKEY_CURRENT_USER,
-            "HKCU":                win32con.HKEY_CURRENT_USER,
-            "HKEY_LOCAL_MACHINE":  win32con.HKEY_LOCAL_MACHINE,
-            "HKLM":                win32con.HKEY_LOCAL_MACHINE,
-            "HKEY_USERS":          win32con.HKEY_USERS,
-            "HKU":                 win32con.HKEY_USERS,
-            "HKEY_CURRENT_CONFIG": win32con.HKEY_CURRENT_CONFIG,
-            "HKCC":                win32con.HKEY_CURRENT_CONFIG,
+            "HKEY_CLASSES_ROOT":   win32con.HKEY_CLASSES_ROOT,  # noqa: E241
+            "HKCR":                win32con.HKEY_CLASSES_ROOT,  # noqa: E241
+            "HKEY_CURRENT_USER":   win32con.HKEY_CURRENT_USER,  # noqa: E241
+            "HKCU":                win32con.HKEY_CURRENT_USER,  # noqa: E241
+            "HKEY_LOCAL_MACHINE":  win32con.HKEY_LOCAL_MACHINE,  # noqa: E241
+            "HKLM":                win32con.HKEY_LOCAL_MACHINE,  # noqa: E241
+            "HKEY_USERS":          win32con.HKEY_USERS,  # noqa: E241
+            "HKU":                 win32con.HKEY_USERS,  # noqa: E241
+            "HKEY_CURRENT_CONFIG": win32con.HKEY_CURRENT_CONFIG,  # noqa: E241
+            "HKCC":                win32con.HKEY_CURRENT_CONFIG,  # noqa: E241
         }
         if name in hive_names:
             return hive_names[name]
@@ -102,16 +104,19 @@ class RegMon(object):
         self.logfile = 'pyregmondaemon.log'
         self.last_sweep_time = 0
         self.event_timeout = 1000   # ms (don't use win32event.INFINITE)
-        self.periodic_sweep = 5*60  # s
+        self.periodic_sweep = 5 * 60  # s
         self.full_key = full_key
         (reg_hive, reg_key) = self.full_key.split('\\', 1)
         self.reg_hive = self.stringToHive(reg_hive)
         self.reg_key = reg_key
         self.start_logging('pyregmondaemon')
 
-    def __del__(self):
+    def exit_cleanup(self):
         self.stop_watching()
         self.stop_logging()
+
+    def __del__(self):
+        self.exit_cleanup()
 
     def start_logging(self, log_title):
         self.log = logging.getLogger(log_title)
@@ -125,11 +130,11 @@ class RegMon(object):
         log_ch.setLevel(logging.DEBUG)
         log_ch.setFormatter(log_formatter)
         self.log.addHandler(log_ch)
-        self.log.info('='*78)
+        self.log.info('=' * 78)
         self.log.info("Starting monitoring of {:s}".format(self.full_key))
 
-    def stop_logging():
-        self.log.info("Ending monitoring")
+    def stop_logging(self):
+        # self.log.info("Ending monitoring")
         for handler in self.log.handlers:
             handler.close()
             self.log.removeFilter(handler)
@@ -173,12 +178,19 @@ class RegMon(object):
             self.start_watching()
 
     def sweep_keys(self):
-        reg_handle_local = win32api.RegOpenKeyEx(
-            self.reg_hive,
-            self.reg_key,
-            0,
-            win32con.KEY_ALL_ACCESS
-        )
+        try:
+            reg_handle_local = win32api.RegOpenKeyEx(
+                self.reg_hive,
+                self.reg_key,
+                0,
+                win32con.KEY_ALL_ACCESS
+            )
+        except pywintypes.error as e:
+            self.log.error(repr(e))
+            self.log.error("Error opening registry key - are you running as admin?")
+            self.log.error("Exiting")
+            self.exit_cleanup()
+            sys.exit(1)
         matched_sub_keys = []
         try:
             key_idx = 0
@@ -224,10 +236,10 @@ if __name__ == "__main__":
 
     subkeys_allowed = [  # Exceptions to the block list
         # Will have ^ and $ added programatically
-        #r'.*\s*DropboxExt05', r'.*\s*DropboxExt5',
-        #r'.*\s*DropboxExt06', r'.*\s*DropboxExt6',
-        #r'.*\s*DropboxExt07', r'.*\s*DropboxExt7',
-        #r'.*\s*SkyDrivePro1',
+        # r'.*\s*DropboxExt05', r'.*\s*DropboxExt5',
+        # r'.*\s*DropboxExt06', r'.*\s*DropboxExt6',
+        # r'.*\s*DropboxExt07', r'.*\s*DropboxExt7',
+        # r'.*\s*SkyDrivePro1',
     ]
 
     regmon = RegMon(fullkey_watched)

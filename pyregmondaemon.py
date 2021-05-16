@@ -11,7 +11,7 @@ Disclaimer: this modifies your registry - DO NOT USE if you aren't comfortable
 with editing your registry!
 
 -------------------------------------------------------------------------------
-    Copyright 2017-2019 Martin F. Falatic
+    Copyright 2017-2021 Martin F. Falatic
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -63,6 +63,17 @@ Notable shell icon overlays that order themselved first by prepending spaces:
     SkyDrivePro1 ErrorConflict [useful]
     SkyDrivePro2 SyncInProgress
     SkyDrivePro3 InSync
+
+    WDDesktopIconOverlay01 ?
+    WDDesktopIconOverlay02 ?
+    WDDesktopIconOverlay03 ?
+    WDDesktopIconOverlay04 ?
+    WDDesktopIconOverlay05 ?
+    WDDesktopIconOverlay06 ?
+
+    AccExtIco1 ?
+    AccExtIco2 ?
+    AccExtIco3 ?
 
 -------------------------------------------------------------------------------
 '''
@@ -150,7 +161,7 @@ class RegMon(object):
             True,  # subtree changes too
             win32api.REG_NOTIFY_CHANGE_LAST_SET | win32api.REG_NOTIFY_CHANGE_NAME,
             self.evt_handle,  # what happens when triggered (req'd for async)
-            True  # async
+            True,  # async
         )
 
     def stop_watching(self):
@@ -183,7 +194,7 @@ class RegMon(object):
                 self.reg_hive,
                 self.reg_key,
                 0,
-                win32con.KEY_ALL_ACCESS
+                win32con.KEY_ALL_ACCESS,
             )
         except pywintypes.error as e:
             self.log.error(repr(e))
@@ -225,13 +236,15 @@ class RegMon(object):
 
 if __name__ == "__main__":
     # There should be NO reason to change this value!
-    fullkey_watched = r'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\ShellIconOverlayIdentifiers'
+    fullkey_watched = 'HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\ShellIconOverlayIdentifiers'
 
     subkeys_blocked = [   # The initial block list
         # Will have ^ and $ added programatically
         r'.*\s*DropboxExt.*',
         r'.*\s*SkyDrivePro.*',
         r'.*\s*OneDrive.*',
+        r'.*\s*WDDesktopIconOverlay.*',
+        r'.*\s*AccExtIco.*',
     ]
 
     subkeys_allowed = [  # Exceptions to the block list

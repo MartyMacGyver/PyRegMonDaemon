@@ -6,11 +6,11 @@ A Python 3 Windows daemon for monitoring and undoing specific shell icon overlay
 
 Note: this must run with admin privileges to work properly. You may want to create a shortcut to this that runs minimised with admin privileges, with a target such as:
 
-`C:\Python37\python.exe X:\tools\pyregmondaemon.py`
+`C:\Python39\python.exe X:\tools\pyregmondaemon.py`
 
 or for no console output at all:
 
-`C:\Python37\pythonw.exe X:\tools\pyregmondaemon.py`
+`C:\Python39\pythonw.exe X:\tools\pyregmondaemon.py`
 
 (If you don't make python.exe part of the target you may not be able to check the "run as administrator" box. Alternatively you could run this from an admin-elevated command prompt.)
 
